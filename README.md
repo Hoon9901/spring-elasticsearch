@@ -281,3 +281,8 @@ API 호출 결과
     }
 ]
 ```
+
+
+## 레퍼런스
+
+- [Spring Data Elasticsearch 5.2.0 공식 문서](https://docs.spring.io/spring-data/elasticsearch/reference/elasticsearch.html)
