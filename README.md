@@ -282,7 +282,65 @@ API 호출 결과
 ]
 ```
 
+## SSL 관련 Connection Refused 문제가 발생할 시
+
+```java
+    @Override
+    public ClientConfiguration clientConfiguration() {
+        return ClientConfiguration.builder()
+                .connectedTo(host)
+                .usingSsl(disableSslVerification(), allHostsValid())
+                .withBasicAuth(username, password)
+                .build();
+    }
+
+    public static SSLContext disableSslVerification() {
+        try {
+            // ============================================
+            // trust manager 생성(인증서 체크 전부 안함)
+            TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
+                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                    return null;
+                }
+
+                public void checkClientTrusted(X509Certificate[] certs, String authType) {
+                }
+
+                public void checkServerTrusted(X509Certificate[] certs, String authType) {
+                }
+            }};
+
+            // trust manager 설치
+            SSLContext sc = SSLContext.getInstance("SSL");
+            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+
+            return sc;
+        } catch (NoSuchAlgorithmException | KeyManagementException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static HostnameVerifier allHostsValid() {
+
+        // ============================================
+        // host name verifier 생성(호스트 네임 체크안함)
+        HostnameVerifier allHostsValid = (hostname, session) -> true;
+
+        // host name verifier 설치
+        HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
+        return allHostsValid;
+
+    }
+```
+
+SSL 인증서가 없거나 사설 인증서로 통신하는 경우 Connection Refused 문제가 발생할 수 있습니다.
+그래서 위 방법을 통해서 SSL 인증서를 체크하지 않도록 설정하면 됩니다.
+ElasticSearch ClientConfiguration usingSsl() 메서드에 SSLContext와 HostNameVerifier를 설정하면 됩니다.
+
 
 ## 레퍼런스
 
 - [Spring Data Elasticsearch 5.2.0 공식 문서](https://docs.spring.io/spring-data/elasticsearch/reference/elasticsearch.html)
+- [SSL 인증서](https://www.skyer9.pe.kr/wordpress/?p=7544)
