@@ -7,5 +7,5 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
 import java.util.List;
 
 public interface PostDocumentRepository extends ElasticsearchRepository<PostDocument, Long> {
-    List<PostDocument> findByTitleOrContent(String title, String content);
+    List<PostDocument> findByContent(String content);
 }

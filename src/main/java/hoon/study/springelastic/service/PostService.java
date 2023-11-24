@@ -36,6 +36,6 @@ public class PostService {
     }
 
     public List<PostDocument> searchPost(String keyword) {
-        return postDocumentRepository.findByTitleOrContent(keyword, keyword);
+        return postDocumentRepository.findByContent(keyword);
     }
 }

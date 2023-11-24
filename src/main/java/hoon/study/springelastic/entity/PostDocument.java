@@ -9,7 +9,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.time.LocalDateTime;
 
-@Document(indexName = "post")
+@Document(indexName = "artscope-test-post")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -22,24 +22,20 @@ public class PostDocument {
     private Long id;
 
     @Field(type = FieldType.Text)
-    private String title;
-
-    @Field(type = FieldType.Text)
     private String content;
 
     @Field(type = FieldType.Date, format = DateFormat.date_hour_minute_second)
-    private LocalDateTime createdAt;
+    private LocalDateTime createdTime;
 
     @Field(type = FieldType.Date, format = DateFormat.date_hour_minute_second)
-    private LocalDateTime updatedAt;
+    private LocalDateTime updatedTime;
 
     public static PostDocument from (Post post) {
         return PostDocument.builder()
                 .id(post.getId())
-                .title(post.getTitle())
                 .content(post.getContent())
-                .createdAt(post.getCreatedAt())
-                .updatedAt(post.getUpdatedAt())
+                .createdTime(post.getCreatedAt())
+                .updatedTime(post.getUpdatedAt())
                 .build();
     }
 
