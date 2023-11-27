@@ -2,14 +2,12 @@ package hoon.study.springelastic.entity;
 
 import jakarta.persistence.Id;
 import lombok.*;
-import org.springframework.data.elasticsearch.annotations.DateFormat;
-import org.springframework.data.elasticsearch.annotations.Document;
-import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldType;
+import org.springframework.data.elasticsearch.annotations.*;
 
 import java.time.LocalDateTime;
 
-@Document(indexName = "artscope-test-post")
+@Document(indexName = "artscope-test-post2")
+@Setting(settingPath = "es-config/es-analyzer.json")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -21,7 +19,7 @@ public class PostDocument {
     @Field(type = FieldType.Long)
     private Long id;
 
-    @Field(type = FieldType.Text)
+    @Field(type = FieldType.Text, analyzer = "my_nori_analyzer", searchAnalyzer = "my_nori_analyzer")
     private String content;
 
     @Field(type = FieldType.Date, format = DateFormat.date_hour_minute_second)
